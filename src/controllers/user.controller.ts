@@ -3,22 +3,13 @@ import { Request, Response } from 'express'
 import Database from '../services/Database.service.js'
 
 import { UserModel } from '../../models/user.js'
+
 import { UserSessionModel } from '../../models/usersession.js'
+
+import { setToken } from '../helpers.js'
 
 // Models
 const { user: User, user_session: UserSession } = Database.getInstance().models
-
-/**
- * Creates a UserSession and sets up a cookie with the session's key
- *
- * @param {UserModel} user The user to create the session for
- * @param {Express.Request} res The request object
- * @param {Express.Response} res The response object
- */
-async function setToken(user: UserModel, req: Request, res: Response) {
-  const session = await UserSession.create({ userId: user.id }) as UserSessionModel
-  res.cookie('token', session.key, { sameSite: 'none', secure: !!req.secure, httpOnly: true, domain: req.hostname })
-}
 
 export default class UserController {
   /**
@@ -34,7 +25,8 @@ export default class UserController {
     if (user) return res.sendStatus(409)
     user = await User.create({ email, name, password }) as UserModel
     // Create a session for the user and send the session's key as a cookie
-    await setToken(user, req, res)
+    const session = await UserSession.create({ userId: user.id }) as UserSessionModel
+    setToken(session.key, req, res)
     return res.json({ success: true, user })
   }
 
@@ -52,7 +44,8 @@ export default class UserController {
     const user = await User.scope('full').findOne({ where: { email } }) as UserModel
     if ((!user) || (!(user as any).checkPassword(password))) return res.sendStatus(403)
     // Create a session for the user and send the session's key as a cookie
-    await setToken(user, req, res)
+    const session = await UserSession.create({ userId: user.id }) as UserSessionModel
+    setToken(session.key, req, res)
     return res.json({ success: true, user })
   }
 }

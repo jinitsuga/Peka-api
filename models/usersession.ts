@@ -38,6 +38,10 @@ export default (sequelize: Sequelize) => {
     },
   })
 
+  UserSession.prototype.logout = function() {
+    this.destroy({ force: true })
+  }
+
   UserSession.beforeValidate(generateKey)
 
   return (models: any): void => {
