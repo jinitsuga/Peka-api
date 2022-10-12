@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node dist/src/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/src/server.js\"",
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "pre:build": "npm run migrate",
+    "migrate": "npx sequelize-cli db:migrate"
   },
   "author": "",
   "license": "ISC",
@@ -16,8 +18,10 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.14",
     "@types/node": "^18.8.4",
+    "@types/sequelize": "^4.28.14",
     "concurrently": "^7.4.0",
     "nodemon": "^2.0.20",
+    "sequelize-cli": "^6.5.1",
     "typescript": "^4.8.4"
   },
   "dependencies": {
@@ -25,6 +29,8 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "pg": "^8.8.0",
+    "sequelize": "^6.25.0"
   }
 }

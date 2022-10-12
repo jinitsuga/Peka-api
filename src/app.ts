@@ -1,7 +1,10 @@
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import express from 'express'
+import express, { Request, Response } from 'express'
+
+// Controllers
+import UserController from './controllers/user.controller'
 
 const { urlencoded, json } = bodyParser
 
@@ -22,6 +25,9 @@ app.use(cors({
 }))
 
 // Routes
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/', (req: Request, res: Response) => res.send('Peka API v1.0'))
+
+app.post('/signup', UserController.signup)
+app.post('/signin', UserController.signin)
 
 export default app
