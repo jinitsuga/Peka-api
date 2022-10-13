@@ -9,9 +9,16 @@ export default {
     "url": DATABASE_URL,
     "dialect": "postgres"
   },
-  "test": {
-    "url": "",
-    "dialect": "postgres"
+  "staging": {
+    "url": DATABASE_URL,
+    "dialect": "postgres",
+    "ssl":true,
+    "dialectOptions":{
+      "ssl":{
+        "require":true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "production": {
     "url": DATABASE_URL,
