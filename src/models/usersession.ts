@@ -13,6 +13,8 @@ export default class UserSession extends Model<InferAttributes<UserSession>, Inf
   declare key: CreationOptional<string>
   declare userId: ForeignKey<number>
   declare lastSeen: CreationOptional<Date>
+  declare createdAt: CreationOptional<Date>
+  declare updatedAt: CreationOptional<Date>
   logout(): void {
     this.destroy({ force: true })
   }
@@ -27,8 +29,15 @@ const attributes: ModelAttributes = {
   },
   key: {
     type: DataTypes.STRING,
-    defaultValue: () => crypto.randomBytes(16).toString('hex'),
     allowNull: false,
+    unique: true,
+    defaultValue: async () => {
+      let key = ''
+      while ((!key) || (await UserSession.findOne({ where: { key } }))) {
+        key = crypto.randomBytes(16).toString('hex')
+      }
+      return key
+    },
   },
   userId: {
     type: DataTypes.INTEGER,
@@ -37,6 +46,14 @@ const attributes: ModelAttributes = {
   lastSeen: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
+    allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
     allowNull: false,
   },
 }

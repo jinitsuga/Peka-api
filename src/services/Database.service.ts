@@ -4,6 +4,7 @@ import sequelize from 'sequelize'
 
 import { userInit } from '../models/user'
 import { userSessionInit } from '../models/usersession'
+import { productInit } from '../models/product'
 
 // Load env variables
 dotenv.config()
@@ -32,7 +33,7 @@ class Database {
   }
 
   static setupModels() {
-    const modelInits = [userInit, userSessionInit]
+    const modelInits = [userInit, userSessionInit, productInit]
     const associations = []
   
     // Define the models

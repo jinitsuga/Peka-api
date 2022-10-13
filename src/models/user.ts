@@ -25,6 +25,8 @@ export default class User extends Model<InferAttributes<User>, InferCreationAttr
   declare name: string
   declare salt: CreationOptional<string>
   declare password: string
+  declare createdAt: CreationOptional<Date>
+  declare updatedAt: CreationOptional<Date>
   checkPassword(password: string): boolean {
     return (this.password === generteHashedPassword(password, this.salt))
   }
@@ -53,6 +55,14 @@ const attributes: ModelAttributes = {
   },
   password: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
     allowNull: false,
   },
 }

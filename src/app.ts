@@ -5,6 +5,7 @@ import express, { Request, Response } from 'express'
 
 // Controllers
 import UserController from './controllers/user.controller'
+import ProductController from './controllers/product.controller'
 
 const { urlencoded, json } = bodyParser
 
@@ -29,5 +30,7 @@ app.get('/', (req: Request, res: Response) => res.send('Peka API v0.1'))
 
 app.post('/signup', UserController.signup)
 app.post('/signin', UserController.signin)
+
+app.get('/products', ProductController.getAll)
 
 export default app

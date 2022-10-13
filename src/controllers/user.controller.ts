@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 
-import User from '../models/user.js'
+import User from '../models/user'
 
-import UserSession from '../models/usersession.js'
+import UserSession from '../models/usersession'
 
-import { setToken } from '../helpers.js'
+import { setToken } from '../helpers'
 
 export default class UserController {
   /**
