@@ -2,8 +2,8 @@ import { Sequelize } from 'sequelize'
 import dotenv from 'dotenv'
 import sequelize from 'sequelize'
 
-import User from '../../models/user'
-import UserSession from '../../models/usersession'
+import { userInit } from '../models/user'
+import { userSessionInit } from '../models/usersession'
 
 // Load env variables
 dotenv.config()
@@ -32,12 +32,13 @@ class Database {
   }
 
   static setupModels() {
-    const modelDefiners = [User, UserSession]
+    const modelInits = [userInit, userSessionInit]
     const associations = []
-
+  
     // Define the models
-    for (const modelDefiner of modelDefiners) {
-      associations.push(modelDefiner(Database.getInstance()))
+    for (const modelInit of modelInits) {
+      modelInit.class.init(modelInit.attributes, { ...modelInit.options, underscored: true, sequelize: Database.getInstance() })
+      associations.push(modelInit.associations)
     }
 
     // Define the models' associations

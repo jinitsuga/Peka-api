@@ -1,13 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { UserSessionModel } from '../../models/usersession.js'
+import UserSession from '../models/usersession.js'
 
 import { setToken } from '../helpers.js'
-
-import Database from '../services/Database.service.js'
-
-// Models
-const { user_session: UserSession } = Database.getInstance().models
 
 class AuthMiddleware {
   /**
@@ -22,7 +17,7 @@ class AuthMiddleware {
     const { token } = req.cookies
     if (!token) return res.sendStatus(401)
 		// Get the UserSession from the DB
-    const session = await UserSession.findOne({ where: { key: token } }) as UserSessionModel
+    const session = await UserSession.findOne({ where: { key: token } })
     if (!session) return res.sendStatus(401)
     // Check if the session is still valid
     if (session.lastSeen.getTime() + 24 * 60 * 60 < Date.now()) {

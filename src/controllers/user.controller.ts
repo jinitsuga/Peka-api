@@ -1,15 +1,10 @@
 import { Request, Response } from 'express'
 
-import Database from '../services/Database.service.js'
+import User from '../models/user.js'
 
-import { UserModel } from '../../models/user.js'
-
-import { UserSessionModel } from '../../models/usersession.js'
+import UserSession from '../models/usersession.js'
 
 import { setToken } from '../helpers.js'
-
-// Models
-const { user: User, user_session: UserSession } = Database.getInstance().models
 
 export default class UserController {
   /**
@@ -21,11 +16,11 @@ export default class UserController {
   static async signup(req: Request, res: Response) {
     const { email, name, password } = req.body
     if ((!email) || (!name) || (!password)) return res.sendStatus(400)
-    let user = await User.findOne({ where: { email } }) as UserModel
+    let user = await User.findOne({ where: { email } })
     if (user) return res.sendStatus(409)
-    user = await User.create({ email, name, password }) as UserModel
+    user = await User.create({ email, name, password })
     // Create a session for the user and send the session's key as a cookie
-    const session = await UserSession.create({ userId: user.id }) as UserSessionModel
+    const session = await UserSession.create({ userId: user.id })
     setToken(session.key, req, res)
     return res.json({ success: true, user })
   }
@@ -41,10 +36,10 @@ export default class UserController {
     // Check required fields
     if ((!email) || (!password)) return res.sendStatus(400)
     // Get the user & verify it exists and its password is correct
-    const user = await User.scope('full').findOne({ where: { email } }) as UserModel
-    if ((!user) || (!(user as any).checkPassword(password))) return res.sendStatus(403)
+    const user = await User.scope('full').findOne({ where: { email } })
+    if ((!user) || (!user.checkPassword(password))) return res.sendStatus(403)
     // Create a session for the user and send the session's key as a cookie
-    const session = await UserSession.create({ userId: user.id }) as UserSessionModel
+    const session = await UserSession.create({ userId: user.id })
     setToken(session.key, req, res)
     return res.json({ success: true, user })
   }

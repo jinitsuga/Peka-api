@@ -25,7 +25,7 @@ app.use(cors({
 }))
 
 // Routes
-app.get('/', (req: Request, res: Response) => res.send('Peka API v1.0'))
+app.get('/', (req: Request, res: Response) => res.send('Peka API v0.1'))
 
 app.post('/signup', UserController.signup)
 app.post('/signin', UserController.signin)
