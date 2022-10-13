@@ -1,9 +1,12 @@
 import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model, ModelAttributes } from 'sequelize'
 import * as crypto from 'crypto'
 
-function generateKey(userSession: UserSession): void {
+async function generateKey(userSession: UserSession): Promise<void> {
   if (!userSession.get('key')) {
-    const key = crypto.randomBytes(16).toString('hex')
+    let key = ''
+    while ((!key) || (await UserSession.findOne({ where: { key } }))) {
+      key = crypto.randomBytes(16).toString('hex')
+    }
     userSession.set('key', key)
   }
 }
@@ -31,13 +34,6 @@ const attributes: ModelAttributes = {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    defaultValue: async () => {
-      let key = ''
-      while ((!key) || (await UserSession.findOne({ where: { key } }))) {
-        key = crypto.randomBytes(16).toString('hex')
-      }
-      return key
-    },
   },
   userId: {
     type: DataTypes.INTEGER,
@@ -61,7 +57,7 @@ const attributes: ModelAttributes = {
 const options = {
   tableName: 'user_sessions',
   hooks: {
-    beforeValidate: generateKey,
+    beforeValidate: async (userSession: UserSession) => await generateKey(userSession),
   },
 }
 

@@ -26,7 +26,7 @@ export default class UserController {
   }
 
   /**
-   * Express handler for login a user
+   * Express handler for login in a user
    *
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
@@ -42,5 +42,22 @@ export default class UserController {
     const session = await UserSession.create({ userId: user.id })
     setToken(session.key, req, res)
     return res.json({ success: true, user })
+  }
+
+  /**
+   * Express handler for login out a user
+   *
+   * @param {Express.Request} req The request object
+   * @param {Express.Response} res The response object
+   */
+  static async signout(req: Request, res: Response) {
+    const { session } = req.body
+    // Get the user session
+    const userSession = await UserSession.findOne({ where: { key: session.key } })
+    // Logout the session
+    userSession?.logout()
+    // Unset the session cookie
+    setToken('', req, res)
+    return res.json({ success: true })
   }
 }

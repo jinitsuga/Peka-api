@@ -7,6 +7,9 @@ import express, { Request, Response } from 'express'
 import UserController from './controllers/user.controller'
 import ProductController from './controllers/product.controller'
 
+// Middlewares
+import AuthMiddleware from './middlewares/auth.middleware'
+
 const { urlencoded, json } = bodyParser
 
 // Server
@@ -30,6 +33,7 @@ app.get('/', (req: Request, res: Response) => res.send('Peka API v0.1'))
 
 app.post('/signup', UserController.signup)
 app.post('/signin', UserController.signin)
+app.get('/signout', AuthMiddleware.authenticate, UserController.signout)
 
 app.get('/products', ProductController.getAll)
 
