@@ -7,7 +7,7 @@
     "start": "node dist/src/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/src/server.js\"",
     "build": "npx tsc",
-    "pre:build": "npm run migrate",
+    "pre:build": "npm i && npm run migrate",
     "migrate": "npx sequelize-cli db:migrate"
   },
   "bin": {
