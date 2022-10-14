@@ -39,7 +39,7 @@ app.get('/signout', AuthMiddleware.authenticate, UserController.signout)
 app.get('/products', ProductController.getAll)
 
 app.post('/offers', AuthMiddleware.authenticate, OfferController.create)
-app.put('/offers/:id', AuthMiddleware.authenticate, OfferController.update)
-app.delete('/offers/:id', AuthMiddleware.authenticate, OfferController.delete)
+app.put('/offers/:offerId', AuthMiddleware.authenticate, OfferController.update)
+app.delete('/offers/:offerId', AuthMiddleware.authenticate, OfferController.delete)
 
 export default app

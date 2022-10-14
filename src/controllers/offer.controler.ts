@@ -52,7 +52,7 @@ export default class OfferController {
       productId,
       session,
     } = req.body
-    const { id: offerId } = req.params
+    const { offerId } = req.params
     if (
       (!quantity) ||
       (!quantityUnit) ||
@@ -79,7 +79,7 @@ export default class OfferController {
    */
   static async delete(req: Request, res: Response) {
     const { session } = req.body
-    const { id: offerId } = req.params
+    const { offerId } = req.params
     const offer = await Offer.findByPk(offerId)
     if (!offer) return res.sendStatus(404)
     const userId = session.userId
