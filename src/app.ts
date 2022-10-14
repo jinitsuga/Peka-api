@@ -30,7 +30,7 @@ app.use(cors({
 }))
 
 // Routes
-app.get('/', (req: Request, res: Response) => res.send('Peka API v0.1'))
+app.get('/', (req: Request, res: Response) => res.send('Peka API v0.2'))
 
 app.post('/signup', UserController.signup)
 app.post('/signin', UserController.signin)
@@ -39,5 +39,7 @@ app.get('/signout', AuthMiddleware.authenticate, UserController.signout)
 app.get('/products', ProductController.getAll)
 
 app.post('/offers', AuthMiddleware.authenticate, OfferController.create)
+app.put('/offers/:id', AuthMiddleware.authenticate, OfferController.update)
+app.delete('/offers/:id', AuthMiddleware.authenticate, OfferController.delete)
 
 export default app
