@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 
 import Offer from '../models/offer'
+import Product from '../models/product'
 import User from '../models/user'
 
 export default class OfferController {
@@ -31,6 +32,8 @@ export default class OfferController {
       (!Offer.getAttributes().type.values?.includes(type))
     ) return res.sendStatus(400)
     const userId = session.userId
+    const product = await Product.findByPk(productId)
+    if (!product) return res.sendStatus(404)
     const offer = await Offer.create({ quantity, quantityUnit, type, description, pictures, productId, userId })
     return res.json(offer)
   }
@@ -64,6 +67,8 @@ export default class OfferController {
     ) return res.sendStatus(400)
     const offer = await Offer.findByPk(offerId)
     if (!offer) return res.sendStatus(404)
+    const product = await Product.findByPk(productId)
+    if (!product) return res.sendStatus(404)
     const userId = session.userId
     if (offer.userId != userId) return res.sendStatus(403)
     await offer.update({ quantity, quantityUnit, type, description, pictures, productId })

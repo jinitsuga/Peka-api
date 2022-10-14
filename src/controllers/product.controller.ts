@@ -10,7 +10,6 @@ export default class ProductController {
    * @param {Express.Response} res The response object
    */
   static async getAll(req: Request, res: Response) {
-    const { email, name, password } = req.body
     const products = await Product.findAll()
     return res.json(products)
   }
