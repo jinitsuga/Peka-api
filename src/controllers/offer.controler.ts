@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 
 import Offer from '../models/offer'
+import User from '../models/user'
 
 export default class OfferController {
   /**
@@ -86,5 +87,21 @@ export default class OfferController {
     if (offer.userId != userId) return res.sendStatus(403)
     await offer.destroy()
     return res.json({ success: true })
+  }
+
+  /**
+   * Express handler for getting all offers from a user
+   * 
+   * Precondition: There's an active user session with this request
+   *
+   * @param {Express.Request} req The request object
+   * @param {Express.Response} res The response object
+   */
+  static async getAll(req: Request, res: Response) {
+    const { userId } = req.params
+    const user = await User.findByPk(userId)
+    if (!user) return res.sendStatus(404)
+    const offers = await Offer.findAll({ where: { userId } })
+    return res.json(offers)
   }
 }
