@@ -9,6 +9,7 @@ import ProductController from './controllers/product.controller'
 
 // Middlewares
 import AuthMiddleware from './middlewares/auth.middleware'
+import OfferController from './controllers/offer.controler'
 
 const { urlencoded, json } = bodyParser
 
@@ -36,5 +37,7 @@ app.post('/signin', UserController.signin)
 app.get('/signout', AuthMiddleware.authenticate, UserController.signout)
 
 app.get('/products', ProductController.getAll)
+
+app.post('/offers', AuthMiddleware.authenticate, OfferController.create)
 
 export default app

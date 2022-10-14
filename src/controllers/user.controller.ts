@@ -46,6 +46,8 @@ export default class UserController {
 
   /**
    * Express handler for login out a user
+   * 
+   * Precondition: There's an active user session with this request
    *
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
