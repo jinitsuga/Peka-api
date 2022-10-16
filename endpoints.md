@@ -19,7 +19,7 @@
 - **Success Response:**
 
   - **Code:** `200` <br>
-      **Content:** `{ success: true, user: [user object] }`
+      **Content:** `[user object]`
 
 - **Error Response:**
 
@@ -51,7 +51,7 @@
 - **Success Response:**
 
   - **Code:** `200` <br>
-      **Content:** `{ success: true, user: [User object] }`
+      **Content:** `[User object]`
 
 - **Error Response:**
 
@@ -89,6 +89,77 @@ Signs out the user associated with the request's session cookie.
 - **Notes:**
 
   The success response clears the cookie that had the session key.
+
+**Get Reset Password Token**
+
+Sends an email to a User with a tokenized link for reseting their password.
+
+- **URL**
+
+  `/reset-password`
+
+- **Method**
+
+  `POST`
+
+- **Data Params**
+  
+  **Required:**
+
+  `email: string`
+
+- **Success Response:**
+
+  - **Code:** `200` <br>
+      **Content:** `{ success: true }`
+
+- **Error Response:**
+
+  - **Code:** `400` <br>
+    **Reason**: Any required parameters are missign or incorrect.<br>
+      **Content:** `Bad request`
+
+- **Notes:**
+
+  The success response is sent regardless of if a registered User with the provided email was found or not
+
+**Reset Password**
+
+Resets the password of a user.
+
+- **URL**
+
+  `/reset-password/:token`
+
+- **Method**
+
+  `POST`
+
+- **Data Params**
+  
+  **Required:**
+
+  `password: string`
+
+- **Success Response:**
+
+  - **Code:** `200` <br>
+      **Content:** `{ success: true }`
+
+- **Error Response:**
+
+  - **Code:** `400` <br>
+    **Reason**: Any required parameters are missign or incorrect.<br>
+      **Content:** `Bad request`
+
+  - **Code:** `401` <br>
+    **Reason**: The provided token has expired.<br>
+      **Content:** `Unauthorized`
+
+
+  - **Code:** `404` <br>
+    **Reason**: The provided token is not associated to any User.<br>
+      **Content:** `Not found`
 
 **Products**
 

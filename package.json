@@ -1,13 +1,15 @@
 {
   "name": "peka-api",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "description": "",
-  "main": "index.ts",
+  "main": "src/server.ts",
   "scripts": {
-    "start": "node dist/src/server.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/src/server.js\"",
-    "build": "npm i && npm run migrate && npx tsc",
-    "migrate": "npx sequelize-cli db:migrate"
+    "start": "node dist/server.js",
+    "dev": "nodemon src/server.ts",
+    "build": "npm run clean && npm run copy-templates && npm run migrate && npx tsc",
+    "migrate": "npx sequelize-cli db:migrate",
+    "clean": "rimraf ./dist/",
+    "copy-templates": "copyfiles -u 1 ./src/templates/* ./src/templates/**/* ./dist/"
   },
   "bin": {
     "peka": "./bin/index.js"
@@ -20,11 +22,15 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.14",
     "@types/node": "^18.8.4",
+    "@types/nodemailer": "^6.4.6",
+    "@types/nodemailer-express-handlebars": "^4.0.2",
     "@types/sequelize": "^4.28.14",
     "@types/yargs": "^17.0.13",
-    "concurrently": "^7.4.0",
+    "copyfiles": "^2.4.1",
     "nodemon": "^2.0.20",
+    "rimraf": "^3.0.2",
     "sequelize-cli": "^6.5.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
   },
   "dependencies": {
@@ -33,6 +39,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-handlebars": "^6.0.6",
+    "handlebars": "^4.7.7",
+    "nodemailer": "^6.8.0",
+    "nodemailer-express-handlebars": "^5.0.0",
     "pg": "^8.8.0",
     "sequelize": "^6.25.0",
     "yargs": "^17.6.0"

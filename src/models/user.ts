@@ -1,8 +1,8 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, ModelAttributes } from 'sequelize'
 import * as crypto from 'crypto'
 
-function generateSalt(): string {
-  return crypto.randomBytes(16).toString('hex')
+function generateRandomString(length: number = 16): string {
+  return crypto.randomBytes(length).toString('hex')
 }
 
 function generteHashedPassword(password: string, salt: string): string {
@@ -12,7 +12,7 @@ function generteHashedPassword(password: string, salt: string): string {
 function hashPassword(user: User): void {
   if (user.changed('password')) {
     const password = user.get('password')
-    const salt = user.get('salt') || generateSalt()
+    const salt = user.get('salt') || generateRandomString()
     user.set('salt', salt)
     user.set('password', generteHashedPassword(password, salt))
     user.changed('password', false)
@@ -25,10 +25,36 @@ export default class User extends Model<InferAttributes<User>, InferCreationAttr
   declare name: string
   declare salt: CreationOptional<string>
   declare password: string
+  declare resetPasswordToken: CreationOptional<string | null>
+  declare resetPasswordTtl: CreationOptional<Date | null>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   checkPassword(password: string): boolean {
     return (this.password === generteHashedPassword(password, this.salt))
+  }
+  async generateResetPasswordToken(): Promise<string> {
+    const token = generateRandomString()
+    this.resetPasswordToken = token
+    // 15 minutes TTL for the password reset token
+    this.resetPasswordTtl = new Date(Date.now() + 15 * 60 * 1000)
+    await this.save()
+    return token
+  }
+  async isResetPasswordTokenValid(): Promise<boolean> {
+    // Check if there's a token & a token TTL set
+    if ((!this.resetPasswordToken) || (!this.resetPasswordTtl)) return false
+    // Check if the token is still valid
+    const valid = this.resetPasswordTtl.getTime() > Date.now()
+    // If the token is not valid reset the token & token TTL fields on the user
+    if (!valid) {
+      await this.clearResetPasswordToken(true)
+    }
+    return valid
+  }
+  async clearResetPasswordToken(save: boolean = false): Promise<void> {
+    this.resetPasswordToken = null
+    this.resetPasswordTtl = null
+    if (save) await this.save()
   }
 }
 
@@ -57,6 +83,12 @@ const attributes: ModelAttributes = {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+  },
+  resetPasswordTtl: {
+    type: DataTypes.DATE,
+  },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
@@ -69,7 +101,7 @@ const attributes: ModelAttributes = {
 
 const options = {
   tableName: 'users',
-  defaultScope: { attributes: { exclude: ['password', 'salt'] } },
+  defaultScope: { attributes: { exclude: ['password', 'salt', 'resetPasswordToken', 'resetPasswordTtl'] } },
   scopes: { full: {} },
   hooks: {
     beforeValidate: hashPassword,

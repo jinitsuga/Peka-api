@@ -30,11 +30,13 @@ app.use(cors({
 }))
 
 // Routes
-app.get('/', (req: Request, res: Response) => res.send('Peka API v0.2'))
+app.get('/', (req: Request, res: Response) => res.send('Peka API v0.5.0'))
 
 app.post('/signup', UserController.signup)
 app.post('/signin', UserController.signin)
 app.get('/signout', AuthMiddleware.authenticate, UserController.signout)
+app.post('/reset-password', UserController.getResetToken)
+app.post('/reset-password/:token', UserController.resetPassword)
 
 app.get('/products', ProductController.getAll)
 

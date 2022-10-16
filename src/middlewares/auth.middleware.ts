@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 
-import UserSession from '../models/usersession.js'
+import UserSession from '../models/usersession'
 
-import { setToken } from '../helpers.js'
+import { setToken } from '../helpers'
 
 class AuthMiddleware {
   /**
@@ -21,7 +21,7 @@ class AuthMiddleware {
     if (!session) return res.sendStatus(401)
     // Check if the session is still valid
     if (session.lastSeen.getTime() + 24 * 60 * 60 < Date.now()) {
-      (session as any).logout()
+      session.logout()
       setToken('', req, res)
       return res.sendStatus(401)
     }
