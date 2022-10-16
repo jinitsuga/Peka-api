@@ -22,6 +22,7 @@ export default class UserController {
     // Create a session for the user and send the session's key as a cookie
     const session = await UserSession.create({ userId: user.id })
     setToken(session.key, req, res)
+    user = await User.findByPk(user.id)
     return res.json({ success: true, user })
   }
 
@@ -36,11 +37,12 @@ export default class UserController {
     // Check required fields
     if ((!email) || (!password)) return res.sendStatus(400)
     // Get the user & verify it exists and its password is correct
-    const user = await User.scope('full').findOne({ where: { email } })
+    let user = await User.scope('full').findOne({ where: { email } })
     if ((!user) || (!user.checkPassword(password))) return res.sendStatus(403)
     // Create a session for the user and send the session's key as a cookie
     const session = await UserSession.create({ userId: user.id })
     setToken(session.key, req, res)
+    user = await User.findByPk(user.id)
     return res.json({ success: true, user })
   }
 
