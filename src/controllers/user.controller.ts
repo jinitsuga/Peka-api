@@ -109,7 +109,7 @@ export default class UserController {
     if (!user) return res.sendStatus(200)
     // Generate a password reset token
     const token = await user.generateResetPasswordToken()
-    const link = `${WEB_URL}/${WEB_RESET_PASSWORD_PATH}/${token}`
+    const link = `${WEB_URL}/${WEB_RESET_PASSWORD_PATH}?token=${token}`
     try {
       await Mailer.sendEmail(user.email, 'Recuperar contraseña', 'password-reset', { link })
       return res.sendStatus(200)
