@@ -1,4 +1,6 @@
-**Signup**
+---
+
+## Signup
 
 - **URL**
 
@@ -35,7 +37,9 @@
 
   The success response includes a cookie with the session key.
 
-**Signin**
+---
+
+## Signin
 
 - **URL**
 
@@ -67,7 +71,9 @@
 
   The success response includes a cookie with the session key.
 
-**Signout**
+---
+
+## Signout
 
 Signs out the user associated with the request's session cookie.
 
@@ -94,7 +100,9 @@ Signs out the user associated with the request's session cookie.
 
   The success response clears the cookie that had the session key.
 
-**Get Reset Password Token**
+---
+
+## Get Reset Password Token
 
 Sends an email to a User with a tokenized link for reseting their password.
 
@@ -127,7 +135,9 @@ Sends an email to a User with a tokenized link for reseting their password.
 
   The success response is sent regardless of if a registered User with the provided email was found or not
 
-**Reset Password**
+---
+
+## Reset Password
 
 Resets the password of a user.
 
@@ -164,7 +174,9 @@ Resets the password of a user.
     **Reason**: The provided token is not associated to any User.<br>
       **Content:** `Not found`
 
-**Update User**
+---
+
+## Update User
 
 Updates a User's data.
 
@@ -210,7 +222,9 @@ Updates a User's data.
     **Reason**: The provided email is already in use by another user.<br>
       **Content:** `Conflict`
 
-**Products**
+---
+
+## Products
 
 - **URL**
 
@@ -225,7 +239,9 @@ Updates a User's data.
   - **Code:** `200` <br>
       **Content:** `[Array with all the products in the system]`
 
-**Create Offer**
+---
+
+## Create Offer
 
 Creates a new Offer for the user associated with the request's session cookie.
 
@@ -270,7 +286,9 @@ Creates a new Offer for the user associated with the request's session cookie.
     **Reason**: The selected Product was not found.<br>
       **Content:** `Not found`
 
-**Update Offer**
+---
+
+## Update Offer
 
 Updates an existing Offer of the user associated with the request's session cookie.
 
@@ -319,7 +337,9 @@ Updates an existing Offer of the user associated with the request's session cook
     **Reason**: Either the selected Product or the selected Offer were not found.<br>
       **Content:** `Not found`
 
-**Delete Offer**
+---
+
+## Delete Offer
 
 Deletes an existing Offer of the user associated with the request's session cookie.
 
@@ -350,7 +370,9 @@ Deletes an existing Offer of the user associated with the request's session cook
     **Reason**: The selected Offer was not found.<br>
       **Content:** `Not found`
 
-**Get User Offers**
+---
+
+## Get User Offers
 
 Returns all the Offers of a User.
 
@@ -361,6 +383,12 @@ Returns all the Offers of a User.
 - **Method**
 
   `GET`
+
+- **URL Params**
+
+  **Optional:**
+
+  `page: number`: Used to indicate what page of results you want.
 
 - **Success Response:**
 
@@ -377,7 +405,15 @@ Returns all the Offers of a User.
     **Reason**: The selected User was not found.<br>
       **Content:** `Not found`
 
-**Search Offers**
+- **Notes:**
+
+  If no `page` is specified then the first page of results will be returned.
+
+  The page size for this endpoint is 12 elements.
+
+---
+
+## Search Offers
 
 Searches for Offers that meet a given criteria.
 
@@ -391,18 +427,12 @@ Searches for Offers that meet a given criteria.
 
 - **URL Params**
 
-  There are two query parameters used for this endpoint:
-  
-  - `products`: used for specifying the products associated with the Offers.
-  - `types` used for specifying the types of Offers you want.
-
-  Both parameters accept multiple comma-separated values.
-
   **Optional:**
 
-  `products: string` <br>
-  `types: string`
-
+  `products: string`: Used for specifying the products associated with the Offers. <br>
+  `types: string`: Used for specifying the types of Offers you want. <br>
+  `page: number`: Used to indicate what page of results you want.
+  
 - **Success Response:**
 
   - **Code:** `200` <br>
@@ -416,9 +446,17 @@ Searches for Offers that meet a given criteria.
 
 - **Notes:**
 
+  Both the `products` and `types` parameters accept multiple comma-separated values. If multiple values are used the results will include Offers that match any of the given values.
+
   If no `products` or `types` are specified then an empty array is returned. If you want all available Offers, use the "Get All Offers" endpoint.
 
-**Get All Offers**
+  If no `page` is specified then the first page of results will be returned.
+
+  The page size for this endpoint is 12 elements.
+
+---
+
+## Get All Offers
 
 Gets all Offers on the system.
 
@@ -430,6 +468,12 @@ Gets all Offers on the system.
 
   `GET`
 
+- **URL Params**
+
+  **Optional:**
+
+  `page: number`: Used to indicate what page of results you want.
+
 - **Success Response:**
 
   - **Code:** `200` <br>
@@ -440,3 +484,9 @@ Gets all Offers on the system.
   - **Code:** `401` <br>
     **Reason**: There's no active session cookie on the request.<br>
       **Content:** `Unauthorized`
+
+- **Notes:**
+
+  If no `page` is specified then the first page of results will be returned.
+
+  The page size for this endpoint is 12 elements.

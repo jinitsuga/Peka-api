@@ -1,9 +1,22 @@
+import dotenv from 'dotenv'
 import { Request, Response } from 'express'
 import { Op } from 'sequelize'
 
 import Offer from '../models/offer'
 import Product from '../models/product'
 import User from '../models/user'
+
+// Load env variables
+dotenv.config()
+const { PAGINATION_SIZE } = process.env
+
+function getLimit(): number {
+  return Number(PAGINATION_SIZE) || 12
+}
+
+function getOffset(page: any): number {
+  return (Math.abs((Number(page) || 1)) - 1) * getLimit()
+}
 
 export default class OfferController {
   /**
@@ -105,9 +118,10 @@ export default class OfferController {
    */
   static async getAllUser(req: Request, res: Response) {
     const { userId } = req.params
+    const { page } = req.query
     const user = await User.findByPk(userId)
     if (!user) return res.sendStatus(404)
-    const offers = await Offer.findAll({ where: { userId } })
+    const offers = await Offer.findAll({ where: { userId }, limit: getLimit(), offset: getOffset(page) })
     return res.json(offers)
   }
 
@@ -120,7 +134,8 @@ export default class OfferController {
    * @param {Express.Response} res The response object
    */
   static async getAll(req: Request, res: Response) {
-    const offers = await Offer.findAll()
+    const { page } = req.query
+    const offers = await Offer.findAll({ limit: getLimit(), offset: getOffset(page) })
     return res.json(offers)
   }
 
@@ -134,6 +149,7 @@ export default class OfferController {
    */
   static async search(req: Request, res: Response) {
     const { products, types } = req.query
+    const { page } = req.query
     const productsArray = products?.toString().split(',') || []
     const typesArray = types?.toString().split(',') || []
     const productIds = await Product.findAll({ attributes: ['id'], where: { name: { [Op.in]: productsArray } } })
@@ -147,6 +163,8 @@ export default class OfferController {
         }
       },
       include: [Product, User],
+      limit: getLimit(),
+      offset: getOffset(page),
     })
     return res.json(offers)
   }
