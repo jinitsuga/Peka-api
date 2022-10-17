@@ -1,8 +1,26 @@
+import https from 'https'
+import { IncomingMessage } from 'http'
+import { URLSearchParams } from 'url'
+import dotenv from 'dotenv'
 import { Request, Response, NextFunction } from 'express'
 
 import UserSession from '../models/usersession'
 
 import { setToken } from '../helpers'
+
+// Load env variables
+dotenv.config()
+const { HCAPTCHA_SECRET } = process.env
+
+type hcpatchaResponse = {
+	success: boolean
+	challengeTs: Date
+	hostname: string
+	credit: boolean
+	errorCodes: Array<string>
+	score: number
+	scoreReason: Array<string>
+}
 
 class AuthMiddleware {
   /**
@@ -31,6 +49,44 @@ class AuthMiddleware {
 		// Add the userSession to the request body
     req.body['session'] = session
     next()
+  }
+
+  /**
+   * Checks to see if there's a valid captcha response
+   *
+   * @param {Express.Request} req The request object
+   * @param {Express.Response} res The response object
+   * @param {function} next
+   */
+  static async captcha(req: Request, res: Response, next: NextFunction) {
+    const { captcha } = req.body
+    if (!captcha) return res.sendStatus(400)
+    const captchaData = (new URLSearchParams({ secret: HCAPTCHA_SECRET, response: captcha } as any)).toString()
+    const captchaReq = https.request(
+      {
+        hostname: 'hcaptcha.com',
+        path: '/siteverify',
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          'content-length': Buffer.byteLength(captchaData),
+        },
+      },
+      (captchaRes: IncomingMessage) => {
+        if (captchaRes.statusCode !== 200) return res.sendStatus(500)
+        captchaRes.on('data', (data: string) => {
+          const captchaResJson: hcpatchaResponse = JSON.parse(data)
+          if (!captchaResJson.success) return res.sendStatus(401)
+          next()
+        })
+      }
+    )
+    captchaReq.on('error', (error: Error) => {
+      console.error(error)
+      res.sendStatus(500)
+    })
+    captchaReq.write(captchaData)
+    captchaReq.end()
   }
 }
 

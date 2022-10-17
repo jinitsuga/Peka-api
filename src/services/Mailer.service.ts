@@ -5,7 +5,6 @@ import { create } from 'express-handlebars';
 import nmehbs from 'nodemailer-express-handlebars'
 import { join } from 'path';
 
-
 // Load env variables
 dotenv.config()
 const {
