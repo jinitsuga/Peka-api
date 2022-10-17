@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
-    "build": "npm run clean && npm run copy-templates && npm run migrate && npx tsc",
+    "build": "npm update && npm run clean && npm run copy-templates && npm run migrate && npx tsc",
     "migrate": "npx sequelize-cli db:migrate",
     "clean": "rimraf ./dist/",
     "copy-templates": "copyfiles -u 1 ./src/templates/* ./src/templates/**/* ./dist/"
