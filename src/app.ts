@@ -37,7 +37,7 @@ app.post('/signin', UserController.signin)
 app.get('/signout', AuthMiddleware.authenticate, UserController.signout)
 app.post('/reset-password', UserController.getResetToken)
 app.post('/reset-password/:token', UserController.resetPassword)
-app.post('/profile', AuthMiddleware.authenticate, UserController.update)
+app.put('/users', AuthMiddleware.authenticate, UserController.update)
 
 app.get('/products', ProductController.getAll)
 

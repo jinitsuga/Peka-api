@@ -170,11 +170,11 @@ Updates a User's data.
 
 - **URL**
 
-  `/profile`
+  `/users`
 
 - **Method**
 
-  `POST`
+  `PUT`
 
 - **Data Params**
   
