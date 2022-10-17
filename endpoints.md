@@ -82,7 +82,7 @@ Signs out the user associated with the request's session cookie.
 - **Success Response:**
 
   - **Code:** `200` <br>
-      **Content:** `{ success: true }`
+      **Content:** `OK`
 
 - **Error Response:**
 
@@ -115,7 +115,7 @@ Sends an email to a User with a tokenized link for reseting their password.
 - **Success Response:**
 
   - **Code:** `200` <br>
-      **Content:** `{ success: true }`
+      **Content:** `OK`
 
 - **Error Response:**
 
@@ -148,7 +148,7 @@ Resets the password of a user.
 - **Success Response:**
 
   - **Code:** `200` <br>
-      **Content:** `{ success: true }`
+      **Content:** `OK`
 
 - **Error Response:**
 
@@ -334,7 +334,7 @@ Deletes an existing Offer of the user associated with the request's session cook
 - **Success Response:**
 
   - **Code:** `200` <br>
-      **Content:** `{ success: true }`
+      **Content:** `OK`
 
 - **Error Response:**
 

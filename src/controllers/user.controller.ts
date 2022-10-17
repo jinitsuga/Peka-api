@@ -70,7 +70,7 @@ export default class UserController {
     userSession?.logout()
     // Unset the session cookie
     setToken('', req, res)
-    return res.json({ success: true })
+    return res.sendStatus(200)
   }
 
   /**
@@ -106,13 +106,13 @@ export default class UserController {
     if (!email) return res.sendStatus(400)
     // Get the user and check it exists
     const user = await User.findOne({ where: { email } })
-    if (!user) return res.json({ success: true })
+    if (!user) return res.sendStatus(200)
     // Generate a password reset token
     const token = await user.generateResetPasswordToken()
     const link = `${WEB_URL}/${WEB_RESET_PASSWORD_PATH}/${token}`
     try {
       await Mailer.sendEmail(user.email, 'Recuperar contraseña', 'password-reset', { link })
-      return res.json({ success: true })
+      return res.sendStatus(200)
     } catch (error) {
       console.error(error)
       return res.sendStatus(500)
@@ -140,6 +140,6 @@ export default class UserController {
     // Reset the user's password
     user.password = password
     await user.save()
-    return res.json({ success: true })
+    return res.sendStatus(200)
   }
 }

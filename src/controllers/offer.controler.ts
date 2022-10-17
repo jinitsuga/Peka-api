@@ -92,7 +92,7 @@ export default class OfferController {
     const userId = session.userId
     if (offer.userId != userId) return res.sendStatus(403)
     await offer.destroy()
-    return res.json({ success: true })
+    return res.sendStatus(200)
   }
 
   /**
