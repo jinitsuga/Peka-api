@@ -9,16 +9,6 @@ function generteHashedPassword(password: string, salt: string): string {
   return crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
 }
 
-function hashPassword(user: User): void {
-  if (user.changed('password')) {
-    const password = user.get('password')
-    const salt = user.get('salt') || generateRandomString()
-    user.set('salt', salt)
-    user.set('password', generteHashedPassword(password, salt))
-    user.changed('password', false)
-  }
-}
-
 export default class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>
   declare email: string
@@ -82,6 +72,15 @@ const attributes: ModelAttributes = {
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+    set(this: User, value: string) {
+      // Get a new salt
+      const salt = generateRandomString()
+      // Hash the password
+      const password = generteHashedPassword(value, salt)
+      // Set the new password & salt
+      this.setDataValue('password', password)
+      this.setDataValue('salt', salt)
+    },
   },
   resetPasswordToken: {
     type: DataTypes.STRING,
@@ -103,9 +102,7 @@ const options = {
   tableName: 'users',
   defaultScope: { attributes: { exclude: ['password', 'salt', 'resetPasswordToken', 'resetPasswordTtl'] } },
   scopes: { full: {} },
-  hooks: {
-    beforeValidate: hashPassword,
-  },
+  hooks: {},
 }
 
 const associations = (models: any) => {

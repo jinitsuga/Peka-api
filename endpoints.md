@@ -27,6 +27,10 @@
     **Reason**: Any required parameters are missign or incorrect.<br>
       **Content:** `Bad request`
 
+  - **Code:** `409` <br>
+    **Reason**: The provided email is already in use by another user.<br>
+      **Content:** `Conflict`
+
 - **Notes:**
 
   The success response includes a cookie with the session key.
@@ -156,10 +160,55 @@ Resets the password of a user.
     **Reason**: The provided token has expired.<br>
       **Content:** `Unauthorized`
 
-
   - **Code:** `404` <br>
     **Reason**: The provided token is not associated to any User.<br>
       **Content:** `Not found`
+
+**Update User**
+
+Updates a User's data.
+
+- **URL**
+
+  `/profile`
+
+- **Method**
+
+  `POST`
+
+- **Data Params**
+  
+  **Required:**
+
+  `name: string` <br>
+  `email: string`
+  
+  **Optional:**
+
+  `password: string`
+
+- **Success Response:**
+
+  - **Code:** `200` <br>
+      **Content:** `[Updated User]`
+
+- **Error Response:**
+
+  - **Code:** `400` <br>
+    **Reason**: Any required parameters are missign or incorrect.<br>
+      **Content:** `Bad request`
+
+  - **Code:** `401` <br>
+    **Reason**: There's no active session cookie on the request.<br>
+      **Content:** `Unauthorized`
+
+  - **Code:** `404` <br>
+    **Reason**: The User does not exist.<br>
+      **Content:** `Not found`
+
+  - **Code:** `409` <br>
+    **Reason**: The provided email is already in use by another user.<br>
+      **Content:** `Conflict`
 
 **Products**
 

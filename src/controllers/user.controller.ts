@@ -74,6 +74,27 @@ export default class UserController {
   }
 
   /**
+   * Express handler for updating a User
+   * 
+   * Precondition: There's an active user session with this request
+   *
+   * @param {Express.Request} req The request object
+   * @param {Express.Response} res The response object
+   */
+  static async update(req: Request, res: Response) {
+    const { email, name, password, session } = req.body
+    if ((!email) || (!name)) return res.sendStatus(400)
+    let user = await User.findByPk(session.userId)
+    if (!user) return res.sendStatus(404)
+    const userEmail = await User.findOne({ where: { email } })
+    if ((userEmail) && (userEmail.id !== user.id)) return res.sendStatus(409)
+    await user.update({ email, name, password })
+    // Get the User again with the limited scope (not fetching password, salt, etc.)
+    user = await User.findByPk(user.id)
+    return res.json(user)
+  }
+
+  /**
    * Express handler for generating a reset password token
    *
    * @param {Express.Request} req The request object
