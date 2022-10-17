@@ -287,8 +287,8 @@ Updates an existing Offer of the user associated with the request's session cook
   **Required:**
 
   `quantity: number` <br>
-  `quantityUnit: string` <br>
-  `type: string` <br>
+  `quantityUnit: ['units', 'kilograms', 'grams', 'bundles']` <br>
+  `type: ['product', 'seedling', 'seeds']` <br>
   `productId: number` <br>
   
   **Optional:**
@@ -376,3 +376,67 @@ Returns all the Offers of a User.
   - **Code:** `404` <br>
     **Reason**: The selected User was not found.<br>
       **Content:** `Not found`
+
+**Search Offers**
+
+Searches for Offers that meet a given criteria.
+
+- **URL**
+
+  `/offers/search`
+
+- **Method**
+
+  `GET`
+
+- **URL Params**
+
+  There are two query parameters used for this endpoint:
+  
+  - `products`: used for specifying the products associated with the Offers.
+  - `types` used for specifying the types of Offers you want.
+
+  Both parameters accept multiple comma-separated values.
+
+  **Optional:**
+
+  `products: string` <br>
+  `types: string`
+
+- **Success Response:**
+
+  - **Code:** `200` <br>
+      **Content:** `[Array of Offers that match the given criteria]`
+
+- **Error Response:**
+
+  - **Code:** `401` <br>
+    **Reason**: There's no active session cookie on the request.<br>
+      **Content:** `Unauthorized`
+
+- **Notes:**
+
+  If no `products` or `types` are specified then an empty array is returned. If you want all available Offers, use the "Get All Offers" endpoint.
+
+**Get All Offers**
+
+Gets all Offers on the system.
+
+- **URL**
+
+  `/offers`
+
+- **Method**
+
+  `GET`
+
+- **Success Response:**
+
+  - **Code:** `200` <br>
+      **Content:** `[Array of all Offers on the system]`
+
+- **Error Response:**
+
+  - **Code:** `401` <br>
+    **Reason**: There's no active session cookie on the request.<br>
+      **Content:** `Unauthorized`

@@ -100,8 +100,8 @@ const attributes: ModelAttributes = {
 
 const options = {
   tableName: 'users',
-  defaultScope: { attributes: { exclude: ['password', 'salt', 'resetPasswordToken', 'resetPasswordTtl'] } },
-  scopes: { full: {} },
+  defaultScope: { attributes: { exclude: ['email', 'password', 'salt', 'resetPasswordToken', 'resetPasswordTtl'] } },
+  scopes: { full: {}, self: { attributes: { exclude: ['password', 'salt', 'resetPasswordToken', 'resetPasswordTtl'] } } },
   hooks: {},
 }
 

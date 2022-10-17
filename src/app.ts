@@ -42,8 +42,10 @@ app.put('/users', AuthMiddleware.authenticate, UserController.update)
 app.get('/products', ProductController.getAll)
 
 app.post('/offers', AuthMiddleware.authenticate, OfferController.create)
+app.get('/offers', AuthMiddleware.authenticate, OfferController.getAll)
+app.get('/offers/search', AuthMiddleware.authenticate, OfferController.search)
 app.put('/offers/:offerId', AuthMiddleware.authenticate, OfferController.update)
 app.delete('/offers/:offerId', AuthMiddleware.authenticate, OfferController.delete)
-app.get('/users/:userId/offers', AuthMiddleware.authenticate, OfferController.getAll)
+app.get('/users/:userId/offers', AuthMiddleware.authenticate, OfferController.getAllUser)
 
 export default app

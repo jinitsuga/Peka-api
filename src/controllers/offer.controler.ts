@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { Op } from 'sequelize'
 
 import Offer from '../models/offer'
 import Product from '../models/product'
@@ -102,11 +103,51 @@ export default class OfferController {
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
    */
-  static async getAll(req: Request, res: Response) {
+  static async getAllUser(req: Request, res: Response) {
     const { userId } = req.params
     const user = await User.findByPk(userId)
     if (!user) return res.sendStatus(404)
     const offers = await Offer.findAll({ where: { userId } })
+    return res.json(offers)
+  }
+
+  /**
+   * Express handler for getting all offers on the system
+   * 
+   * Precondition: There's an active user session with this request
+   *
+   * @param {Express.Request} req The request object
+   * @param {Express.Response} res The response object
+   */
+  static async getAll(req: Request, res: Response) {
+    const offers = await Offer.findAll()
+    return res.json(offers)
+  }
+
+  /**
+   * Express handler for searching offers
+   * 
+   * Precondition: There's an active user session with this request
+   *
+   * @param {Express.Request} req The request object
+   * @param {Express.Response} res The response object
+   */
+  static async search(req: Request, res: Response) {
+    const { products, types } = req.query
+    const productsArray = products?.toString().split(',') || []
+    const typesArray = types?.toString().split(',') || []
+    const productIds = await Product.findAll({ attributes: ['id'], where: { name: { [Op.in]: productsArray } } })
+    const offers = await Offer.findAll({
+      where: {
+        productId: {
+          [Op.in]: productIds.map((product => product.id))
+        },
+        type: {
+          [Op.in]: typesArray
+        }
+      },
+      include: [Product, User],
+    })
     return res.json(offers)
   }
 }

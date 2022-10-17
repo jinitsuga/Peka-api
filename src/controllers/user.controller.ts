@@ -29,7 +29,7 @@ export default class UserController {
     const session = await UserSession.create({ userId: user.id })
     setToken(session.key, req, res)
     // Get the User again with the limited scope (not fetching password, salt, etc.)
-    user = await User.findByPk(user.id)
+    user = await User.scope('self').findByPk(user.id)
     return res.json(user)
   }
 
@@ -46,11 +46,11 @@ export default class UserController {
     // Get the user & verify it exists and its password is correct
     let user = await User.scope('full').findOne({ where: { email } })
     if ((!user) || (!user.checkPassword(password))) return res.sendStatus(403)
-    // Create a session for the user and send the session's key as a cookie
+    // Create a session for the user and senprofiled the session's key as a cookie
     const session = await UserSession.create({ userId: user.id })
     setToken(session.key, req, res)
     // Get the User again with the limited scope (not fetching password, salt, etc.)
-    user = await User.findByPk(user.id)
+    user = await User.scope('self').findByPk(user.id)
     return res.json(user)
   }
 
@@ -90,7 +90,7 @@ export default class UserController {
     if ((userEmail) && (userEmail.id !== user.id)) return res.sendStatus(409)
     await user.update({ email, name, password })
     // Get the User again with the limited scope (not fetching password, salt, etc.)
-    user = await User.findByPk(user.id)
+    user = await User.scope('self').findByPk(user.id)
     return res.json(user)
   }
 

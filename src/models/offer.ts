@@ -64,7 +64,10 @@ const options = {
   hooks: {},
 }
 
-const associations = (models: any) => {}
+const associations = (models: any) => {
+  Offer.belongsTo(models.Product)
+  Offer.belongsTo(models.User)
+}
 
 export const offerInit = { class: Offer, attributes, options, associations }
 
