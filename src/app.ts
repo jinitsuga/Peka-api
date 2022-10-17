@@ -29,6 +29,9 @@ app.use(cors({
   origin: (origin, callback) => callback(null, true),
 }))
 
+// Needed for HTTPS detection
+app.enable('trust proxy')
+
 // Routes
 app.get('/', (req: Request, res: Response) => res.send('Peka API v0.5.1'))
 
