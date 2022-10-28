@@ -256,8 +256,8 @@ Creates a new Offer for the user associated with the request's session cookie.
   **Required:**
 
   `quantity: number` <br>
-  `quantityUnit: string` <br>
-  `type: string` <br>
+  `quantityUnit: ['units', 'kilograms', 'grams', 'bundles']` <br>
+  `type: ['product', 'seedling', 'seeds']` <br>
   `productId: number` <br>
   
   **Optional:**
