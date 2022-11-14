@@ -38,7 +38,8 @@ class AuthMiddleware {
     const session = await UserSession.findOne({ where: { key: token } })
     if (!session) return res.sendStatus(401)
     // Check if the session is still valid
-    if (session.lastSeen.getTime() + 24 * 60 * 60 < Date.now()) {
+    const day = 24 * 60 * 60 * 1000
+    if (session.lastSeen.getTime() + day < Date.now()) {
       session.logout()
       setToken('', req, res)
       return res.sendStatus(401)
