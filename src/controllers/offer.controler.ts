@@ -152,14 +152,13 @@ export default class OfferController {
     const { page } = req.query
     const productsArray = products?.toString().split(',') || []
     const typesArray = types?.toString().split(',') || []
-    const productIds = await Product.findAll({ attributes: ['id'], where: { name: { [Op.in]: productsArray } } })
     const offers = await Offer.findAll({
       where: {
         productId: {
-          [Op.in]: productIds.map((product => product.id))
+          [Op.or]: productsArray
         },
         type: {
-          [Op.in]: typesArray
+          [Op.or]: typesArray
         }
       },
       include: [Product, User],
