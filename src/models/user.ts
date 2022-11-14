@@ -106,7 +106,7 @@ const options = {
 }
 
 const associations = (models: any) => {
-  User.hasMany(models.UserSession, { foreignKey: 'userId', onDelete: 'cascade' })
+  User.hasMany(models.UserSession, { foreignKey: 'userId', as: 'sessions', onDelete: 'cascade' })
 }
 
 export const userInit = { class: User, attributes, options, associations }

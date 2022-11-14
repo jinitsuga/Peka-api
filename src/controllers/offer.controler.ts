@@ -48,7 +48,7 @@ export default class OfferController {
     const userId = session.userId
     const product = await Product.findByPk(productId)
     if (!product) return res.sendStatus(404)
-    const offer = await Offer.create({ quantity, quantityUnit, type, description, pictures, productId, userId })
+    const offer = await Offer.create({ quantity, quantityUnit, type, description, pictures, productId, userId }, { include: [Product, User] })
     return res.json(offer)
   }
 
@@ -79,7 +79,7 @@ export default class OfferController {
       (!Offer.getAttributes().quantityUnit.values?.includes(quantityUnit)) ||
       (!Offer.getAttributes().type.values?.includes(type))
     ) return res.sendStatus(400)
-    const offer = await Offer.findByPk(offerId)
+    const offer = await Offer.findByPk(offerId, { include: [Product, User] })
     if (!offer) return res.sendStatus(404)
     const product = await Product.findByPk(productId)
     if (!product) return res.sendStatus(404)
@@ -121,7 +121,7 @@ export default class OfferController {
     const { page } = req.query
     const user = await User.findByPk(userId)
     if (!user) return res.sendStatus(404)
-    const offers = await Offer.findAll({ where: { userId }, limit: getLimit(), offset: getOffset(page) })
+    const offers = await Offer.findAll({ where: { userId }, limit: getLimit(), offset: getOffset(page), include: [Product, User] })
     return res.json(offers)
   }
 
@@ -135,7 +135,7 @@ export default class OfferController {
    */
   static async getAll(req: Request, res: Response) {
     const { page } = req.query
-    const offers = await Offer.findAll({ limit: getLimit(), offset: getOffset(page) })
+    const offers = await Offer.findAll({ limit: getLimit(), offset: getOffset(page), include: [Product, User] })
     return res.json(offers)
   }
 

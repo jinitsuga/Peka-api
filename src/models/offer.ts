@@ -65,8 +65,8 @@ const options = {
 }
 
 const associations = (models: any) => {
-  Offer.belongsTo(models.Product)
-  Offer.belongsTo(models.User)
+  Offer.belongsTo(models.Product, { foreignKey: 'productId', as: 'product' })
+  Offer.belongsTo(models.User, { foreignKey: 'userId', as: 'user' })
 }
 
 export const offerInit = { class: Offer, attributes, options, associations }
