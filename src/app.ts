@@ -33,7 +33,7 @@ app.use(cors({
 app.enable('trust proxy')
 
 // Routes
-app.get('/', (req: Request, res: Response) => res.send('Peka API v0.5.1'))
+app.get('/', (req: Request, res: Response) => res.send('Peka API v0.5.5'))
 
 app.post('/signup', UserController.signup)
 app.post('/signin', UserController.signin)

@@ -150,7 +150,7 @@ export default class OfferController {
   static async search(req: Request, res: Response) {
     const { products, types } = req.query
     const { page } = req.query
-    const productsArray = products?.toString().split(',') || []
+    const productsArray = (products?.toString().split(',') || []).filter((id: any) => Number(id))
     const typesArray = types?.toString().split(',') || []
     const offers = await Offer.findAll({
       where: {
