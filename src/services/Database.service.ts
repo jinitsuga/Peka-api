@@ -9,19 +9,16 @@ import { offerInit } from '../models/offer'
 
 // Load env variables
 dotenv.config()
-const { NODE_ENV, DATABASE_URL, DEBUG } = process.env
+const { DATABASE_URL, DEBUG } = process.env
 
 class Database {
   static instance: Sequelize | undefined
 
   constructor() {
     const debug = DEBUG === 'TRUE'
-    const prod = NODE_ENV === 'production'
-    const dialectOptions = prod ? { ssl: { require: true, rejectUnauthorized: false } } : {}
     Database.instance = new Sequelize(DATABASE_URL || '', {
       dialect: 'postgres',
       logging: debug ? console.log : false,
-      dialectOptions,
     })
 
     Database.setupModels()
